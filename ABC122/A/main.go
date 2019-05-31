@@ -19,4 +19,5 @@ func main() {
 		ans = "A"
 	}
 	fmt.Printf("%s\n", ans)
+	fmt.Printf("thinking...")
 }
