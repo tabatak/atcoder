@@ -16,6 +16,36 @@ func main() {
 	}
 }
 
+// Point ...
+type Point struct {
+	x int
+	y int
+}
+
+// Queue ...
+type Queue []Point
+
+// pop ...
+func (q *Queue) empty() bool {
+	return len(*q) == 0
+}
+
+// push ...
+func (q *Queue) push(i Point) {
+	*q = append(*q, i)
+}
+
+// pop ...
+func (q *Queue) pop() (Point, bool) {
+	if q.empty() {
+		return Point{0, 0}, false
+	} else {
+		res := (*q)[0]
+		*q = (*q)[1:]
+		return res, true
+	}
+}
+
 func min(x, y int) int {
 	if x < y {
 		return x
