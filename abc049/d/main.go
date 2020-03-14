@@ -8,11 +8,56 @@ import (
 
 func main() {
 	r := bufio.NewReader(os.Stdin)
-	var n int
+	var n, k, l int
 	fmt.Fscan(r, &n)
+	fmt.Fscan(r, &k)
+	fmt.Fscan(r, &l)
+
+	ps := make([]int, k)
+	qs := make([]int, k)
+	for i := 0; i < k; i++ {
+		fmt.Fscan(r, &ps[i])
+		fmt.Fscan(r, &qs[i])
+		ps[i]--
+		qs[i]--
+	}
+	rs := make([]int, l)
+	ss := make([]int, l)
+	for i := 0; i < l; i++ {
+		fmt.Fscan(r, &rs[i])
+		fmt.Fscan(r, &ss[i])
+		rs[i]--
+		ss[i]--
+	}
+
+	// 道路での連結グループを作成
+	roadConn := newUnionFind(n)
+	for i := 0; i < k; i++ {
+		roadConn.unite(ps[i], qs[i])
+	}
+	// 鉄道での連結グループを作成
+	railConn := newUnionFind(n)
+	for i := 0; i < l; i++ {
+		railConn.unite(rs[i], ss[i])
+	}
+
+	// N個の都市で道路、鉄道両方でつながっている
+	ans := make(map[int]map[int]int)
+	for i := 0; i < n; i++ {
+		x := roadConn.find(i)
+		y := railConn.find(i)
+		if ans[x] == nil {
+			ans[x] = make(map[int]int)
+		}
+		ans[x][y]++
+	}
 
 	wtr := bufio.NewWriter(os.Stdout)
-	fmt.Fprintf(wtr, "%d ", n)
+	for i := 0; i < n; i++ {
+		x := roadConn.find(i)
+		y := railConn.find(i)
+		fmt.Fprintf(wtr, "%d ", ans[x][y])
+	}
 	wtr.Flush()
 }
 
