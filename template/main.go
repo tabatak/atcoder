@@ -86,3 +86,37 @@ func abs(x int) int {
 	}
 	return x
 }
+
+func primeFactor(x int) map[int]int {
+	res := make(map[int]int)
+	for i := 2; i*i <= x; i++ {
+		for x%i == 0 {
+			res[i]++
+			x = x / i
+		}
+	}
+	if x != 1 {
+		res[x] = 1
+	}
+	return res
+}
+
+func divisor(x int) []int {
+	res := make([]int, 0)
+	for i := 1; i*i <= x; i++ {
+		if x%i == 0 {
+			res = append(res, i)
+			if i != x/i {
+				res = append(res, x/i)
+			}
+		}
+	}
+	return res
+}
+
+func gcd(x, y int) int {
+	if y == 0 {
+		return x
+	}
+	return gcd(y, x%y)
+}
