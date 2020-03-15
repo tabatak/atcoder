@@ -120,3 +120,7 @@ func gcd(x, y int) int {
 	}
 	return gcd(y, x%y)
 }
+
+func lcm(x, y int) int {
+	return x / gcd(x, y) * y
+}
