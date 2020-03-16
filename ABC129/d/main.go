@@ -17,17 +17,75 @@ func main() {
 		fmt.Fscan(r, &grid[i])
 	}
 
-	dx := []int{1, 0, -1, 0}
-	dy := []int{0, 1, 0, -1}
+	count := make([][]int, h)
+	for i := 0; i < h; i++ {
+		count[i] = make([]int, w)
+	}
+
+	// 横方向に連続する空白マスを数える
+	for i := 0; i < h; i++ {
+		done := make([]int, w)
+		for j := 0; j < w; j++ {
+			if grid[i][j] == '#' {
+				continue
+			}
+			if done[j] == 1 {
+				continue
+			}
+			l := 0
+			for j+l < w {
+				if grid[i][j+l] == '#' {
+					break
+				}
+				l++
+			}
+			for k := 0; k < l; k++ {
+				count[i][j+k] += l
+				done[j+k] = 1
+			}
+		}
+	}
+	// 縦方向に連続する空白マスを数える
+	for j := 0; j < w; j++ {
+		done := make([]int, h)
+		for i := 0; i < h; i++ {
+			if grid[i][j] == '#' {
+				continue
+			}
+			if done[i] == 1 {
+				continue
+			}
+			l := 0
+			for i+l < h {
+				if grid[i+l][j] == '#' {
+					break
+				}
+				l++
+			}
+			for k := 0; k < l; k++ {
+				count[i+k][j] += l
+				done[i+k] = 1
+			}
+		}
+	}
 
 	ans := 0
+	for i := 0; i < h; i++ {
+		for j := 0; j < w; j++ {
+			ans = max(ans, count[i][j]-1)
+		}
+	}
+	fmt.Println(ans)
 
+	/* 愚直に書いたもの。TLE!!
+	dx := []int{1, 0, -1, 0}
+	dy := []int{0, 1, 0, -1}
+	ans := 0
 	for i := 0; i < h; i++ {
 		for j := 0; j < w; j++ {
 			if grid[i][j] == '#' {
 				continue
 			}
-
 			tmp := 0
 			for k := 0; k < 4; k++ {
 				nx := j + dx[k]
@@ -42,6 +100,7 @@ func main() {
 		}
 	}
 	fmt.Println(ans + 1)
+	*/
 }
 
 // Union-Find
