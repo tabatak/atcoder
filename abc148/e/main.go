@@ -8,47 +8,12 @@ import (
 
 func main() {
 	r := bufio.NewReader(os.Stdin)
-	var N, K, R, S, P int
-	fmt.Fscan(r, &N)
-	fmt.Fscan(r, &K)
-	fmt.Fscan(r, &R)
-	fmt.Fscan(r, &S)
-	fmt.Fscan(r, &P)
-	var t string
-	fmt.Fscan(r, &t)
+	var n int
+	fmt.Fscan(r, &n)
 
-	actual := make([]byte, N)
-	ans := 0
-	for i := 0; i < N; i++ {
-		win := getWin(t[i])
-		if i-K < 0 || actual[i-K] == 0 || win != actual[i-K] {
-			// 勝てる場合
-			ans += getPoint(win, R, S, P)
-			actual[i] = win
-		}
-	}
-
-	fmt.Println(ans)
-}
-
-func getWin(h byte) byte {
-	if h == 'r' {
-		return 'p'
-	} else if h == 's' {
-		return 'r'
-	} else {
-		return 's'
-	}
-}
-
-func getPoint(h byte, r, s, p int) int {
-	if h == 'r' {
-		return r
-	} else if h == 's' {
-		return s
-	} else {
-		return p
-	}
+	wtr := bufio.NewWriter(os.Stdout)
+	fmt.Fprintf(wtr, "%d ", n)
+	wtr.Flush()
 }
 
 // Union-Find
