@@ -8,63 +8,61 @@ import (
 
 func main() {
 	r := bufio.NewReader(os.Stdin)
-	var n int
-	fmt.Fscan(r, &n)
+	var x, y int
+	fmt.Fscan(r, &x)
+	fmt.Fscan(r, &y)
 
-	wtr := bufio.NewWriter(os.Stdout)
-	fmt.Fprintf(wtr, "%d ", n)
-	wtr.Flush()
-}
+	mod := 1000000007
 
-// Union-Find
-type unionFind struct {
-	d []int
-}
-
-func newUnionFind(n int) *unionFind {
-	uf := new(unionFind)
-	uf.d = make([]int, n)
-	for i := 0; i < n; i++ {
-		uf.d[i] = -1
-	}
-	return uf
-}
-
-func (uf *unionFind) find(x int) int {
-	if uf.d[x] < 0 {
-		return x
-	}
-	uf.d[x] = uf.find(uf.d[x])
-	return uf.d[x]
-}
-
-func (uf *unionFind) unite(x, y int) bool {
-	rootX := uf.find(x)
-	rootY := uf.find(y)
-	if rootX == rootY {
-		return false
+	if (x+y)%3 != 0 {
+		fmt.Println(0)
+		return
 	}
 
-	if uf.d[rootX] < uf.d[rootY] {
-		uf.d[rootX] += uf.d[rootY]
-		uf.d[rootY] = rootX
-	} else {
-		uf.d[rootY] += uf.d[rootX]
-		uf.d[rootX] = rootY
+	n := (x + y) / 3
+	x -= n
+	y -= n
+	if x < 0 || y < 0 {
+		fmt.Println(0)
+		return
 	}
 
-	return true
+	ans := modcomb(x+y, x, mod)
+	fmt.Println(ans)
+
+	/* DPで行けるのかと思って書いたもの
+	dp := make([][]int, 3)
+	for i := 0; i < 3; i++ {
+		dp[i] = make([]int, y+1)
+	}
+	dp[0][0] = 1
+	dp[1][2] = 1
+
+	for i := 2; i < x+1; i++ {
+		for j := 0; j < y+1; j++ {
+			// (i+1,j+2)
+			if j-2 >= 0 {
+				dp[2][j] += dp[1][j-2]
+				dp[2][j] %= mod
+			}
+			// (i+2,j+1)
+			if j-1 >= 0 {
+				dp[2][j] += dp[0][j-1]
+				dp[2][j] %= mod
+			}
+		}
+
+		dp[0] = dp[1]
+		dp[1] = dp[2]
+		dp[2] = make([]int, y+1)
+	}
+
+	fmt.Println(dp[1][y])
+	*/
 }
 
-func (uf *unionFind) same(x, y int) bool {
-	return uf.find(x) == uf.find(y)
-}
+// Utility
 
-func (uf *unionFind) size(x int) int {
-	return -uf.d[uf.find(x)]
-}
-
-// mod combination
 func modpow(a, n, mod int) int {
 	res := 1
 	for n > 0 {
@@ -96,8 +94,6 @@ func modfactorial(n, mod int) int {
 	}
 	return result
 }
-
-// Utility
 
 func min(x, y int) int {
 	if x < y {
