@@ -11,9 +11,9 @@ func main() {
 	var n int
 	fmt.Fscan(r, &n)
 
-	wtr := bufio.NewWriter(os.Stdout)
-	fmt.Fprintf(wtr, "%d ", n)
-	wtr.Flush()
+	w := bufio.NewWriter(os.Stdout)
+	defer w.Flush()
+	fmt.Fprintf(w, "%d ", n)
 }
 
 // Union-Find
