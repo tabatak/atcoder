@@ -12,7 +12,9 @@ func main() {
 	fmt.Fscan(r, &s)
 
 	ans := isPalindrome(s)
-	ans = isPalindrome(s[:(len(s)-1)/2])
+	if !isPalindrome(s[:(len(s)-1)/2]) {
+		ans = false
+	}
 
 	if ans {
 		fmt.Println("Yes")
