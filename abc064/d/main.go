@@ -16,37 +16,19 @@ func main() {
 
 	var ans []string
 	opCount := 0
-	clCount := 0
-	i := 0
-	for i < n {
+	for i := 0; i < n; i++ {
 		if s[i] == '(' {
 			ans = append(ans, "(")
 			opCount++
-			i++
-
 		} else {
-			// )が続く回数を調べる
-			clCount++
-			i++
-			for j := i; j < n; j++ {
-				if s[j] != ')' {
-					break
-				}
-				clCount++
-				i++
-			}
-
-			tmpOpCount := max(0, clCount-opCount)
-			for tmpOpCount > 0 {
+			if opCount > 0 {
+				// 直前の ( に対応する場合
+				opCount--
+			} else {
+				// 直前に対応する ( が存在しない場合、先頭に ( を挿入
 				ans = append([]string{"("}, ans...)
-				tmpOpCount--
 			}
-			opCount = max(0, opCount-clCount)
-
-			for clCount > 0 {
-				ans = append(ans, ")")
-				clCount--
-			}
+			ans = append(ans, ")")
 		}
 	}
 
