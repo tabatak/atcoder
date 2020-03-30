@@ -27,40 +27,24 @@ func main() {
 	for i := 0; i < c; i++ {
 		fmt.Fscan(r, &cs[i])
 	}
-	sort.Sort(sort.IntSlice(as))
-	sort.Sort(sort.IntSlice(bs))
-	sort.Sort(sort.IntSlice(cs))
+	sort.Sort(sort.Reverse(sort.IntSlice(as)))
+	sort.Sort(sort.Reverse(sort.IntSlice(bs)))
+
+	var d []int
+	for i := 0; i < x; i++ {
+		d = append(d, as[i])
+	}
+	for i := 0; i < y; i++ {
+		d = append(d, bs[i])
+	}
+	for i := 0; i < c; i++ {
+		d = append(d, cs[i])
+	}
+	sort.Sort(sort.Reverse(sort.IntSlice(d)))
 
 	ans := 0
-	sumX := 0
-	sumY := 0
-	asIndex := a - 1
-	bsIndex := b - 1
-	csIndex := c - 1
-	for sumX+sumY < x+y {
-		if sumX < x {
-			if csIndex < 0 || as[asIndex] >= cs[csIndex] {
-				ans += as[asIndex]
-				asIndex--
-				sumX++
-			} else if bsIndex < 0 || as[asIndex] <= bs[bsIndex] {
-				ans += cs[csIndex]
-				csIndex--
-				sumX++
-			}
-		}
-		if sumY < y {
-			if csIndex < 0 || bs[bsIndex] >= cs[csIndex] {
-				ans += bs[bsIndex]
-				bsIndex--
-				sumY++
-			} else if asIndex < 0 || bs[bsIndex] <= as[asIndex] {
-				ans += cs[csIndex]
-				csIndex--
-				sumY++
-			}
-		}
+	for i := 0; i < x+y; i++ {
+		ans += d[i]
 	}
-
 	fmt.Println(ans)
 }
