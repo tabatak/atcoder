@@ -4,46 +4,73 @@ import (
 	"bufio"
 	"fmt"
 	"os"
-	"strconv"
 )
 
 func main() {
 	r := bufio.NewReader(os.Stdin)
 	var s string
 	fmt.Fscan(r, &s)
-	nums := make([]int, len(s))
-	for i := 0; i < len(s); i++ {
-		num, _ := strconv.Atoi(string(s[i]))
-		nums[i] = num
-	}
 
-	// 2019 = 3 * 673
-	c := make([]int, len(s)+2)
-	c[1] = nums[0]
-	for i := 1; i < len(s); i++ {
-		c[i+1] = c[i] + nums[i]
-	}
-
+	rs := reverseString(s)
+	mod := 2019
+	x := 1
+	tot := 0
+	cnt := make([]int, mod)
 	ans := 0
-	for i := 0; i < len(s)-4; i++ {
-		for j := i + 4; j < len(s); j++ {
-			tmp := c[j+1] - c[i]
-			if tmp%3 == 0 {
-				mul := 1
-				num := 0
-				for k := j; k >= i; k-- {
-					num += nums[k] * mul
-					mul *= 10
-				}
-				if num%673 == 0 {
-					ans++
-				}
-			}
-		}
-	}
+	cnt[0]++ // 0 (mod 2019) のものはそれ自身のみでも対象となるので0をカウントアップしておく
+	for i := 0; i < len(rs); i++ {
+		// 累積和を求める
+		tot += int(rs[i]-'0') * x
+		tot %= mod
+		// mod 2019で合同な桁がすでに存在すれば、
+		// 現在の桁と既出の桁の間で作る数は対象となる
+		ans += cnt[tot]
 
+		cnt[tot]++
+
+		// 桁を進める
+		x = x * 10 % mod
+	}
 	fmt.Println(ans)
 }
+
+// func main() {
+// 	r := bufio.NewReader(os.Stdin)
+// 	var s string
+// 	fmt.Fscan(r, &s)
+// 	nums := make([]int, len(s))
+// 	for i := 0; i < len(s); i++ {
+// 		num, _ := strconv.Atoi(string(s[i]))
+// 		nums[i] = num
+// 	}
+
+// 	// 2019 = 3 * 673
+// 	c := make([]int, len(s)+2)
+// 	c[1] = nums[0]
+// 	for i := 1; i < len(s); i++ {
+// 		c[i+1] = c[i] + nums[i]
+// 	}
+
+// 	ans := 0
+// 	for i := 0; i < len(s)-4; i++ {
+// 		for j := i + 4; j < len(s); j++ {
+// 			tmp := c[j+1] - c[i]
+// 			if tmp%3 == 0 {
+// 				mul := 1
+// 				num := 0
+// 				for k := j; k >= i; k-- {
+// 					num += nums[k] * mul
+// 					mul *= 10
+// 				}
+// 				if num%673 == 0 {
+// 					ans++
+// 				}
+// 			}
+// 		}
+// 	}
+
+// 	fmt.Println(ans)
+// }
 
 // mod combination
 func modpow(a, n, mod int) int {
