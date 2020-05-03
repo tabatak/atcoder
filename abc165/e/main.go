@@ -8,17 +8,13 @@ import (
 
 func main() {
 	r := bufio.NewReader(os.Stdin)
-	var a, b, n int
-	fmt.Fscan(r, &a)
-	fmt.Fscan(r, &b)
+	var n, m int
 	fmt.Fscan(r, &n)
+	fmt.Fscan(r, &m)
 
-	x := n
-	if n >= b-1 {
-		x = b - 1
-	}
-	ans := a*x/b - a*(x/b)
-	fmt.Println(ans)
+	w := bufio.NewWriter(os.Stdout)
+	defer w.Flush()
+	fmt.Fprintf(w, "%d ", n)
 }
 
 // Union-Find
