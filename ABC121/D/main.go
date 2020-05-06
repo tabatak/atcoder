@@ -10,10 +10,15 @@ func main() {
 	fmt.Scan(&a)
 	fmt.Scan(&b)
 
-	ans := 0
-	for i := a; i <= b; i++ {
-		ans ^= i
-	}
-
+	ans := calc(b) ^ calc(a-1)
 	fmt.Println(ans)
+}
+
+func calc(x int) int {
+	count := (x + 1) / 2
+	ans := count % 2
+	if x%2 == 0 {
+		ans ^= x
+	}
+	return ans
 }
