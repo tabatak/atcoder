@@ -8,60 +8,27 @@ import (
 
 func main() {
 	r := bufio.NewReader(os.Stdin)
-	var n int
+	var n, m, k int
 	fmt.Fscan(r, &n)
+	fmt.Fscan(r, &m)
+	fmt.Fscan(r, &k)
 
-	w := bufio.NewWriter(os.Stdout)
-	defer w.Flush()
-	fmt.Fprintf(w, "%d ", n)
-}
-
-// Union-Find
-type unionFind struct {
-	d []int
-}
-
-func newUnionFind(n int) *unionFind {
-	uf := new(unionFind)
-	uf.d = make([]int, n)
-	for i := 0; i < n; i++ {
-		uf.d[i] = -1
+	mod := 998244353
+	ans := 0
+	pow := modpow(m-1, n-k-1, mod)
+	cmb := NewCombination(n+1, mod)
+	cmb.init(n)
+	for i := k; i >= 0; i-- {
+		if i != k {
+			pow *= m - 1
+			pow %= mod
+		}
+		cmb := cmb.calc(n-1, i)
+		tmp := cmb * pow % mod * m % mod
+		ans += tmp
+		ans %= mod
 	}
-	return uf
-}
-
-func (uf *unionFind) find(x int) int {
-	if uf.d[x] < 0 {
-		return x
-	}
-	uf.d[x] = uf.find(uf.d[x])
-	return uf.d[x]
-}
-
-func (uf *unionFind) unite(x, y int) bool {
-	rootX := uf.find(x)
-	rootY := uf.find(y)
-	if rootX == rootY {
-		return false
-	}
-
-	if uf.d[rootX] < uf.d[rootY] {
-		uf.d[rootX] += uf.d[rootY]
-		uf.d[rootY] = rootX
-	} else {
-		uf.d[rootY] += uf.d[rootX]
-		uf.d[rootX] = rootY
-	}
-
-	return true
-}
-
-func (uf *unionFind) same(x, y int) bool {
-	return uf.find(x) == uf.find(y)
-}
-
-func (uf *unionFind) size(x int) int {
-	return -uf.d[uf.find(x)]
+	fmt.Println(ans)
 }
 
 // mod
