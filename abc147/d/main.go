@@ -12,10 +12,26 @@ func main() {
 	r := bufio.NewReader(os.Stdin)
 	var n int
 	fmt.Fscan(r, &n)
+	as := make([]int, n)
+	for i := 0; i < n; i++ {
+		fmt.Fscan(r, &as[i])
+	}
 
-	w := bufio.NewWriter(os.Stdout)
-	defer w.Flush()
-	fmt.Fprintf(w, "%d ", n)
+	ans := 0
+	for i := 0; i <= 60; i++ {
+		x := 0 //i桁目が1の数値の個数
+		for j := 0; j < n; j++ {
+			if as[j]>>uint(i)&1 == 1 {
+				x++
+			}
+		}
+		y := n - x //i桁目が0の数値の個数
+
+		ans += x * y % mod * modpow(2, i, mod)
+		ans %= mod
+	}
+
+	fmt.Println(ans)
 }
 
 // Union-Find
