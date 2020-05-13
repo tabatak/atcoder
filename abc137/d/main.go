@@ -2,20 +2,60 @@ package main
 
 import (
 	"bufio"
+	"container/heap"
 	"fmt"
 	"os"
 )
 
 var mod = 1000000007
 
+// priority_queue
+type intHeap []int
+
+func (h intHeap) Len() int           { return len(h) }
+func (h intHeap) Less(i, j int) bool { return h[i] > h[j] }
+func (h intHeap) Swap(i, j int)      { h[i], h[j] = h[j], h[i] }
+func (h *intHeap) Push(x interface{}) {
+	*h = append(*h, x.(int))
+}
+func (h *intHeap) Pop() interface{} {
+	old := *h
+	n := len(old)
+	x := old[n-1]
+	*h = old[0 : n-1]
+	return x
+}
+
 func main() {
 	r := bufio.NewReader(os.Stdin)
-	var n int
+	var n, m int
 	fmt.Fscan(r, &n)
+	fmt.Fscan(r, &m)
 
-	w := bufio.NewWriter(os.Stdout)
-	defer w.Flush()
-	fmt.Fprintf(w, "%d ", n)
+	jobs := make(map[int][]int)
+	var a, b int
+	for i := 0; i < n; i++ {
+		fmt.Fscan(r, &a)
+		fmt.Fscan(r, &b)
+		jobs[a] = append(jobs[a], b)
+	}
+
+	ans := 0
+	ih := &intHeap{}
+	heap.Init(ih)
+	for i := m - 1; i >= 0; i-- {
+		// できる仕事
+		for _, v := range jobs[m-i] {
+			heap.Push(ih, v)
+		}
+
+		if ih.Len() > 0 {
+			b := heap.Pop(ih)
+			ans += b.(int)
+		}
+	}
+
+	fmt.Println(ans)
 }
 
 // Union-Find
@@ -254,21 +294,4 @@ func (s *Stack) pop() (int, bool) {
 		*s = (*s)[:index]
 		return res, true
 	}
-}
-
-// priority_queue
-type intHeap []int
-
-func (h intHeap) Len() int           { return len(h) }
-func (h intHeap) Less(i, j int) bool { return h[i] > h[j] }
-func (h intHeap) Swap(i, j int)      { h[i], h[j] = h[j], h[i] }
-func (h *intHeap) Push(x interface{}) {
-	*h = append(*h, x.(int))
-}
-func (h *intHeap) Pop() interface{} {
-	old := *h
-	n := len(old)
-	x := old[n-1]
-	*h = old[0 : n-1]
-	return x
 }
