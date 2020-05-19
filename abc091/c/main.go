@@ -3,7 +3,9 @@ package main
 import (
 	"bufio"
 	"fmt"
+	"math"
 	"os"
+	"sort"
 )
 
 var mod = 1000000007
@@ -13,9 +15,46 @@ func main() {
 	var n int
 	fmt.Fscan(r, &n)
 
-	w := bufio.NewWriter(os.Stdout)
-	defer w.Flush()
-	fmt.Fprintf(w, "%d ", n)
+	var x, y int
+	redPoints := make(points, n)
+	for i := 0; i < n; i++ {
+		fmt.Fscan(r, &x)
+		fmt.Fscan(r, &y)
+		redPoints[i] = point{x, y}
+	}
+
+	bluePoints := make(points, n)
+	for i := 0; i < n; i++ {
+		fmt.Fscan(r, &x)
+		fmt.Fscan(r, &y)
+		bluePoints[i] = point{x, y}
+	}
+
+	sort.Sort(redPoints)
+	sort.Sort(bluePoints)
+
+	ans := 0
+	for _, bp := range bluePoints {
+
+		maxY := -1
+		maxYIndex := -1
+		for i := 0; i < n; i++ {
+			rp := redPoints[i]
+			if rp.x < bp.x && rp.y < bp.y {
+				if maxY < rp.y {
+					maxY = rp.y
+					maxYIndex = i
+				}
+			}
+		}
+
+		if maxYIndex >= 0 {
+			redPoints[maxYIndex].x = math.MaxInt64
+			redPoints[maxYIndex].y = math.MaxInt64
+			ans++
+		}
+	}
+	fmt.Println(ans)
 }
 
 // Union-Find
