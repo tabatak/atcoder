@@ -10,12 +10,33 @@ var mod = 1000000007
 
 func main() {
 	r := bufio.NewReader(os.Stdin)
-	var n int
+	var n, p int
 	fmt.Fscan(r, &n)
+	fmt.Fscan(r, &p)
 
-	w := bufio.NewWriter(os.Stdout)
-	defer w.Flush()
-	fmt.Fprintf(w, "%d ", n)
+	evens := 0
+	odds := 0
+	var a int
+	for i := 0; i < n; i++ {
+		fmt.Fscan(r, &a)
+		if a%2 == 0 {
+			evens++
+		} else {
+			odds++
+		}
+	}
+
+	var ans int
+	if odds == 0 {
+		if p == 0 {
+			ans = pow(2, evens)
+		} else {
+			ans = 0
+		}
+	} else {
+		ans = pow(2, n-1)
+	}
+	fmt.Println(ans)
 }
 
 // Union-Find
