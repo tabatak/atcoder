@@ -19,31 +19,18 @@ func main() {
 	}
 	sort.Ints(as)
 
-	mx := as[n-1]
-	nums := make([]bool, mx+1)
-	for i := range nums {
-		nums[i] = true
-	}
+	mx := 1000000
+	nums := make([]int, mx+1)
 
 	for _, v := range as {
-		if !nums[v] {
-			continue
-		}
-		for j := v + v; j <= mx; j = j + v {
-			nums[j] = false
+		for j := v; j <= mx; j = j + v {
+			nums[j]++
 		}
 	}
-
-	for i := 1; i < n; i++ {
-		if as[i-1] == as[i] {
-			nums[as[i]] = false
-		}
-	}
-	fmt.Println(nums)
 
 	ans := 0
 	for _, v := range as {
-		if nums[v] {
+		if nums[v] == 1 {
 			ans++
 		}
 	}
