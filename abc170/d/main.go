@@ -23,6 +23,10 @@ func main() {
 	nums := make([]int, mx+1)
 
 	for _, v := range as {
+		if nums[v] > 0 {
+			nums[v]++
+			continue
+		}
 		for j := v; j <= mx; j = j + v {
 			nums[j]++
 		}
