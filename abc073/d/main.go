@@ -3,11 +3,11 @@ package main
 import (
 	"bufio"
 	"fmt"
-	"math"
 	"os"
 )
 
 var mod = 1000000007
+var inf = 1000000007
 
 func main() {
 	r := bufio.NewReader(os.Stdin)
@@ -26,7 +26,7 @@ func main() {
 	for i := 0; i < n; i++ {
 		costs[i] = make([]int, n)
 		for j := 0; j < n; j++ {
-			costs[i][j] = math.MaxInt64
+			costs[i][j] = inf
 		}
 		costs[i][i] = 0
 	}
@@ -53,8 +53,7 @@ func main() {
 	// 順列で訪問先の順序をすべて試す
 	// これでは重複して訪問する町がでてしまうか。。
 	perms := permutations(rs)
-	fmt.Println(perms)
-	ans := math.MaxInt64
+	ans := inf
 	for _, perm := range perms {
 		tmp := 0
 		for j := 1; j < len(perm); j++ {
