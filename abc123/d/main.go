@@ -37,25 +37,47 @@ func main() {
 	sort.Sort(sort.Reverse(sort.IntSlice(bs)))
 	sort.Sort(sort.Reverse(sort.IntSlice(cs)))
 
-	var abSums []int
-	for _, a := range as {
-		for _, b := range bs {
-			abSums = append(abSums, a+b)
-		}
-	}
-	sort.Sort(sort.Reverse(sort.IntSlice(abSums)))
+	var abc []int
+	for a := 0; a < x; a++ {
+		for b := 0; b < y; b++ {
+			if (a+1)*(b+1) > k {
+				break
+			}
+			for c := 0; c < z; c++ {
+				if (a+1)*(b+1)*(c+1) > k {
+					break
+				}
 
-	var sums []int
-	for _, ab := range abSums[:min(k, len(abSums))] {
-		for _, c := range cs {
-			sums = append(sums, ab+c)
+				abc = append(abc, as[a]+bs[b]+cs[c])
+			}
 		}
 	}
-	sort.Sort(sort.Reverse(sort.IntSlice(sums)))
+	sort.Sort(sort.Reverse(sort.IntSlice(abc)))
 
 	for i := 0; i < k; i++ {
-		fmt.Fprintln(w, sums[i])
+		fmt.Fprintln(w, abc[i])
 	}
+
+	// ↓先にAとBの合計を計算する方法
+	// var abSums []int
+	// for _, a := range as {
+	// 	for _, b := range bs {
+	// 		abSums = append(abSums, a+b)
+	// 	}
+	// }
+	// sort.Sort(sort.Reverse(sort.IntSlice(abSums)))
+
+	// var sums []int
+	// for _, ab := range abSums[:min(k, len(abSums))] {
+	// 	for _, c := range cs {
+	// 		sums = append(sums, ab+c)
+	// 	}
+	// }
+	// sort.Sort(sort.Reverse(sort.IntSlice(sums)))
+
+	// for i := 0; i < k; i++ {
+	// 	fmt.Fprintln(w, sums[i])
+	// }
 
 }
 
