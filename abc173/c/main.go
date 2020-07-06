@@ -27,36 +27,25 @@ func main() {
 	}
 
 	ans := 0
+	for wi := 0; wi < (1 << uint(h)); wi++ {
+		for wj := 0; wj < (1 << uint(w)); wj++ {
+			count := 0
 
-	for i := 0; i < (1 << uint(h)); i++ {
-		ksub := 0
-		is := make(map[int]bool)
-		for j := 0; j < h; j++ {
-			if i>>uint(j)&1 == 1 {
-				for k := 0; k < w; k++ {
-					if grid[j][k] == '#' {
-						ksub++
-					}
+			for i := 0; i < h; i++ {
+				if wi>>uint(i)&1 == 1 {
+					continue
 				}
-				is[j] = true
-			}
-		}
+				for j := 0; j < w; j++ {
+					if wj>>uint(j)&1 == 1 {
+						continue
+					}
 
-		for wi := 0; wi < (1 << uint(w)); wi++ {
-			ksubj := 0
-			for wj := 0; wj < w; wj++ {
-				if wi>>uint(wj)&1 == 1 {
-					for k := 0; k < h; k++ {
-						if ok := is[k]; ok {
-							continue
-						}
-						if grid[k][wj] == '#' {
-							ksubj++
-						}
+					if grid[i][j] == '#' {
+						count++
 					}
 				}
 			}
-			if knum-ksub-ksubj == k {
+			if count == k {
 				ans++
 			}
 		}
