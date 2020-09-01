@@ -14,11 +14,7 @@ func main() {
 	var k int
 	fmt.Fscan(r, &k)
 
-	if k%2 == 0 || k%5 == 0 {
-		fmt.Println("-1")
-		return
-	}
-
+	mp := make(map[int]bool)
 	ans := 1
 	tmp := 0
 	for {
@@ -26,6 +22,12 @@ func main() {
 		if tmp == 0 {
 			break
 		}
+		if mp[tmp] {
+			ans = -1
+			break
+		}
+		mp[tmp] = true
+
 		ans++
 	}
 	fmt.Println(ans)
