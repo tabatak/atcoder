@@ -14,9 +14,61 @@ func main() {
 	var n int
 	fmt.Fscan(r, &n)
 
-	w := bufio.NewWriter(os.Stdout)
-	defer w.Flush()
-	fmt.Fprintf(w, "%d ", n)
+	type point struct{ x, y, z int }
+	points := make([]point, n)
+	for i := 0; i < n; i++ {
+		fmt.Fscan(r, &points[i].x)
+		fmt.Fscan(r, &points[i].y)
+		fmt.Fscan(r, &points[i].z)
+	}
+
+	dist := make([][]int, n)
+	for i := 0; i < n; i++ {
+		d := make([]int, n)
+		for j := 0; j < n; j++ {
+			now := abs(points[i].x - points[j].x)
+			now += abs(points[i].y - points[j].y)
+			now += max(0, points[j].z-points[i].z)
+			d[j] = now
+		}
+		dist[i] = d
+	}
+
+	n2 := 1 << uint(n)
+	dp := make([][]int, n2)
+	for i := 0; i < n2; i++ {
+		tmp := make([]int, n)
+		for j := 0; j < n; j++ {
+			tmp[j] = INF
+		}
+		dp[i] = tmp
+	}
+
+	// 巡回セールスマン(TSP)
+	// bitDP
+	// 初期状態を設定(0以外の頂点に0から移動した状態を作っておく)
+	for i := 0; i < n; i++ {
+		if i == 0 {
+			continue
+		}
+		dp[1<<uint(i)][i] = dist[0][i]
+	}
+	// コスト計算
+	for i := 0; i < n2; i++ {
+		for j := 0; j < n; j++ {
+			if i>>uint(j)&1 != 1 {
+				continue
+			}
+			for k := 0; k < n; k++ {
+				if i>>uint(k)&1 == 1 {
+					continue
+				}
+				dp[i|1<<uint(k)][k] = min(dp[i|1<<uint(k)][k], dp[i][j]+dist[j][k])
+			}
+		}
+	}
+
+	fmt.Println(dp[n2-1][0])
 }
 
 // permutations
