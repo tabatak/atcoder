@@ -8,45 +8,84 @@ import (
 
 var MOD = 1000000007
 var INF = 1001001001
+var N int
+var K int
+var T [][]int
 
 func main() {
 	r := bufio.NewReader(os.Stdin)
-	var n, k int
-	fmt.Fscan(r, &n)
-	fmt.Fscan(r, &k)
+	fmt.Fscan(r, &N)
+	fmt.Fscan(r, &K)
 
-	ts := make([][]int, n)
-	for i := 0; i < n; i++ {
-		ts[i] = make([]int, n)
-		for j := 0; j < n; j++ {
-			fmt.Fscan(r, &ts[i][j])
+	T = make([][]int, N)
+	for i := 0; i < N; i++ {
+		T[i] = make([]int, N)
+		for j := 0; j < N; j++ {
+			fmt.Fscan(r, &T[i][j])
 		}
 	}
-
-	arr := make([]int, n)
-	for i := 0; i < n; i++ {
-		arr[i] = i
-	}
-	pem := permutations(arr)
-
-	ans := 0
-	for _, p := range pem {
-		if p[0] != 0 {
-			continue
-		}
-		cost := 0
-		for i := 0; i < len(p)-1; i++ {
-			cost += ts[p[i]][p[i+1]]
-		}
-		cost += ts[p[len(p)-1]][0]
-
-		if cost == k {
-			ans++
-		}
-	}
+	ans := dfs(0, 0, map[int]bool{0: true})
 	fmt.Println(ans)
-
 }
+
+func dfs(now, cost int, visited map[int]bool) int {
+	if len(visited) == N {
+		if cost+T[now][0] == K {
+			return 1
+		} else {
+			return 0
+		}
+	}
+
+	sum := 0
+	for i := 1; i < N; i++ {
+		if _, ok := visited[i]; !ok {
+			visited[i] = true
+			sum += dfs(i, cost+T[now][i], visited)
+			delete(visited, i)
+		}
+	}
+	return sum
+}
+
+// func main() {
+// 	r := bufio.NewReader(os.Stdin)
+// 	var n, k int
+// 	fmt.Fscan(r, &n)
+// 	fmt.Fscan(r, &k)
+
+// 	ts := make([][]int, n)
+// 	for i := 0; i < n; i++ {
+// 		ts[i] = make([]int, n)
+// 		for j := 0; j < n; j++ {
+// 			fmt.Fscan(r, &ts[i][j])
+// 		}
+// 	}
+
+// 	arr := make([]int, n)
+// 	for i := 0; i < n; i++ {
+// 		arr[i] = i
+// 	}
+// 	pem := permutations(arr)
+
+// 	ans := 0
+// 	for _, p := range pem {
+// 		if p[0] != 0 {
+// 			continue
+// 		}
+// 		cost := 0
+// 		for i := 0; i < len(p)-1; i++ {
+// 			cost += ts[p[i]][p[i+1]]
+// 		}
+// 		cost += ts[p[len(p)-1]][0]
+
+// 		if cost == k {
+// 			ans++
+// 		}
+// 	}
+// 	fmt.Println(ans)
+
+// }
 
 // permutations
 func permutations(arr []int) [][]int {
