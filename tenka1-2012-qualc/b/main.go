@@ -11,12 +11,78 @@ var INF = 1001001001
 
 func main() {
 	r := bufio.NewReader(os.Stdin)
-	var n int
-	fmt.Fscan(r, &n)
+	var s string
+	fmt.Fscan(r, &s)
 
-	w := bufio.NewWriter(os.Stdout)
-	defer w.Flush()
-	fmt.Fprintf(w, "%d ", n)
+	sum := make(map[byte]int)
+	drop := make(map[byte][]string)
+	for _, v := range []byte{'S', 'H', 'D', 'C'} {
+		drop[v] = make([]string, 0)
+	}
+
+	i := 0
+	mark := byte(0)
+	for {
+		card, ok, royal := getCard(s, i)
+		if !ok {
+			break
+		}
+		i += len(card)
+
+		if !royal {
+			for _, v := range []byte{'S', 'H', 'D', 'C'} {
+				drop[v] = append(drop[v], card)
+			}
+			continue
+		}
+
+		sum[card[0]]++
+		if sum[card[0]] == 5 {
+			mark = card[0]
+			break
+		}
+
+		for _, v := range []byte{'S', 'H', 'D', 'C'} {
+			if v == card[0] {
+				continue
+			}
+			drop[v] = append(drop[v], card)
+		}
+	}
+
+	if len(drop[mark]) == 0 {
+		fmt.Println(0)
+		return
+	}
+	for _, v := range drop[mark] {
+		fmt.Print(v)
+	}
+	fmt.Println("")
+
+}
+
+func getCard(s string, start int) (string, bool, bool) {
+	if start >= len(s) {
+		return "", false, false
+	}
+
+	var c []byte
+	c = append(c, s[start])
+	i := start + 1
+	for {
+		if i == len(s) || s[i] == 'S' || s[i] == 'H' || s[i] == 'D' || s[i] == 'C' {
+			break
+		}
+		c = append(c, s[i])
+		i++
+	}
+	flg := false
+	if len(c) == 3 {
+		flg = true
+	} else if c[1] == 'A' || c[1] == 'J' || c[1] == 'Q' || c[1] == 'K' {
+		flg = true
+	}
+	return string(c), true, flg
 }
 
 // permutations
