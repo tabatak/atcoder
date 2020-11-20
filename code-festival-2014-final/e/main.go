@@ -23,23 +23,41 @@ func main() {
 		return
 	}
 
-	// 上昇から開始
-	ans := 0
-	up := rs[0] < rs[1]
-	for i := 0; i < n-1; i++ {
-		if up && rs[i] > rs[i+1] {
-			ans++
-			up = !up
-		} else if !up && rs[i] < rs[i+1] {
-			ans++
-			up = !up
+	var ans []int
+	ans = append(ans, rs[0])
+	for i := 1; i < n-1; i++ {
+		if ans[len(ans)-1] < rs[i] && rs[i] > rs[i+1] {
+			ans = append(ans, rs[i])
+		} else if ans[len(ans)-1] > rs[i] && rs[i] < rs[i+1] {
+			ans = append(ans, rs[i])
+		}
+
+		if i == n-2 {
+			ans = append(ans, rs[i])
 		}
 	}
-	if ans > 0 {
-		ans += 2
+	if len(ans) < 3 {
+		fmt.Println(0)
+		return
 	}
+	fmt.Println(len(ans))
 
-	fmt.Println(ans)
+	// これだとだめ
+	// ans := 0
+	// up := rs[0] < rs[1]
+	// for i := 0; i < n-1; i++ {
+	// 	if up && rs[i] > rs[i+1] {
+	// 		ans++
+	// 		up = !up
+	// 	} else if !up && rs[i] < rs[i+1] {
+	// 		ans++
+	// 		up = !up
+	// 	}
+	// }
+	// if ans > 0 {
+	// 	ans += 2
+	// }
+	// fmt.Println(ans)
 }
 
 // permutations
