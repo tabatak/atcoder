@@ -11,12 +11,96 @@ var INF = 1001001001
 
 func main() {
 	r := bufio.NewReader(os.Stdin)
-	var n int
-	fmt.Fscan(r, &n)
+	m := make([]string, 10)
+	for i := 0; i < 10; i++ {
+		fmt.Fscan(r, &m[i])
+	}
 
-	w := bufio.NewWriter(os.Stdout)
-	defer w.Flush()
-	fmt.Fprintf(w, "%d ", n)
+	g := make([][]int, 10)
+	for i := 0; i < 10; i++ {
+		g[i] = make([]int, 10)
+	}
+
+	dx := []int{-1, 0, 1, 0}
+	dy := []int{0, -1, 0, 1}
+
+	num := 0
+	var q Queue
+	for i := 0; i < 10; i++ {
+		for j := 0; j < 10; j++ {
+			if m[i][j] == 'x' || g[i][j] != 0 {
+				// 海または訪問済みの場合はスキップ
+				continue
+			}
+
+			num++
+			q.push(point{j, i})
+			for !q.empty() {
+				p := q.pop()
+				g[p.y][p.x] = num
+				for k := 0; k < 4; k++ {
+					nx := p.x + dx[k]
+					ny := p.y + dy[k]
+
+					if nx >= 0 && nx < 10 && ny >= 0 && ny < 10 && m[ny][nx] == 'o' && g[ny][nx] == 0 {
+						q.push(point{nx, ny})
+					}
+				}
+			}
+		}
+	}
+
+	for i := 0; i < 10; i++ {
+		for j := 0; j < 10; j++ {
+			if g[i][j] != 0 {
+				continue
+			}
+
+			// 周囲を確認してすべての島をつなげられればOK
+			ilands := make(map[int]bool)
+			for k := 0; k < 4; k++ {
+				nx := j + dx[k]
+				ny := i + dy[k]
+				if nx >= 0 && nx < 10 && ny >= 0 && ny < 10 && g[ny][nx] != 0 {
+					ilands[g[ny][nx]] = true
+				}
+			}
+			if len(ilands) == num {
+				fmt.Println("YES")
+				return
+			}
+		}
+	}
+
+	fmt.Println("NO")
+}
+
+type point struct {
+	x int
+	y int
+}
+
+// Queue ...
+type Queue []point
+
+// pop ...
+func (q *Queue) empty() bool {
+	return len(*q) == 0
+}
+
+// push ...
+func (q *Queue) push(i point) {
+	*q = append(*q, i)
+}
+
+// pop ...
+func (q *Queue) pop() point {
+	if q.empty() {
+		return point{}
+	}
+	res := (*q)[0]
+	*q = (*q)[1:]
+	return res
 }
 
 // permutations
@@ -245,29 +329,6 @@ func pow(a, n int) int {
 	return ret
 }
 
-// Queue ...
-type Queue []int
-
-// pop ...
-func (q *Queue) empty() bool {
-	return len(*q) == 0
-}
-
-// push ...
-func (q *Queue) push(i int) {
-	*q = append(*q, i)
-}
-
-// pop ...
-func (q *Queue) pop() int {
-	if q.empty() {
-		return 0
-	}
-	res := (*q)[0]
-	*q = (*q)[1:]
-	return res
-}
-
 // Stack ...
 type Stack []int
 
@@ -282,15 +343,15 @@ func (s *Stack) push(i int) {
 }
 
 // pop ...
-func (s *Stack) pop() int {
+func (s *Stack) pop() (int, bool) {
 	if s.empty() {
-		return 0
+		return 0, false
+	} else {
+		index := len(*s) - 1
+		res := (*s)[index]
+		*s = (*s)[:index]
+		return res, true
 	}
-	index := len(*s) - 1
-	res := (*s)[index]
-	*s = (*s)[:index]
-	return res
-
 }
 
 // priority_queue
