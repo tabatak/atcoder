@@ -30,9 +30,8 @@ func main() {
 		a := es[i]
 		b := es[i+1]
 		abv := point{b.x - a.x, b.y - a.y}
-		apv := point{p.x - a.x, p.y - a.y}
 
-		l := (abv.x*apv.x + abv.y*apv.y) / math.Sqrt(abv.x*abv.x+abv.y*abv.y)
+		l := math.Abs(abv.x*(a.y-p.y)-abv.y*(a.x-p.x)) / math.Sqrt(abv.x*abv.x+abv.y*abv.y)
 		ans = math.Min(ans, l)
 	}
 	fmt.Printf("%.9f\n", ans)
